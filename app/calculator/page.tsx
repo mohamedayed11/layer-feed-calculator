@@ -8,14 +8,23 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
 
+type ChartPoint = { name: string; value: number }
+type Result = {
+  dailyFeedCost: number
+  dailyEggs: number
+  dailyIncome: number
+  profit: number
+  data: ChartPoint[]
+}
+
 export default function CalculatorPage() {
   const [feedPrice, setFeedPrice] = useState<number>(0)
   const [eggPrice, setEggPrice] = useState<number>(0)
-  const [feedIntake, setFeedIntake] = useState<number>(110) // grams per hen per day
+  const [feedIntake, setFeedIntake] = useState<number>(110)
   const [hens, setHens] = useState<number>(1000)
-  const [productionRate, setProductionRate] = useState<number>(85) // %
+  const [productionRate, setProductionRate] = useState<number>(85)
 
-  const [result, setResult] = useState<any | null>(null)
+  const [result, setResult] = useState<Result | null>(null)
 
   const calculate = () => {
     const intakeKg = (feedIntake / 1000) * hens
@@ -23,13 +32,11 @@ export default function CalculatorPage() {
     const dailyEggs = hens * (productionRate / 100)
     const dailyIncome = dailyEggs * eggPrice
     const profit = dailyIncome - dailyFeedCost
-
-    const data = [
+    const data: ChartPoint[] = [
       { name: "Feed Cost", value: dailyFeedCost },
       { name: "Egg Income", value: dailyIncome },
       { name: "Profit", value: profit },
     ]
-
     setResult({ dailyFeedCost, dailyEggs, dailyIncome, profit, data })
   }
 
@@ -83,7 +90,7 @@ export default function CalculatorPage() {
                         <XAxis dataKey="name" />
                         <YAxis />
                         <Tooltip />
-                        <Bar dataKey="value" fill="#2563eb" />
+                        <Bar dataKey="value" />
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
